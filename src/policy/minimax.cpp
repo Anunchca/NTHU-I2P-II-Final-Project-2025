@@ -11,6 +11,8 @@
 int MiniMax::eval_ctx(
     State *state,
     int depth,
+    int alpha,
+    int beta,
     GameHistory& history,
     int ply,
     SearchContext& ctx,
@@ -69,7 +71,9 @@ int MiniMax::eval_ctx(
 
         // [Hackathon TODO 3-3]
         // search the child one level deeper
-        int raw = MiniMax::eval_ctx(next, depth - 1, history, ply + 1, ctx, p);
+        int raw = same
+            ? MiniMax::eval_ctx(next, depth - 1, alpha, beta,history, ply + 1, ctx, p)
+            : MiniMax::eval_ctx(next, depth - 1, -beta, -alpha,history, ply + 1, ctx, p);
         // [Hackathon TODO 3-4]
         // convert raw to the current player's perspective.
         int score = same ? raw : -raw;
@@ -79,6 +83,14 @@ int MiniMax::eval_ctx(
         // update best_score if this child is better.
         if(score > best_score){
             best_score = score;
+        }
+
+        if (best_score > alpha) {
+            alpha = best_score;
+        }
+
+        if (alpha >= beta) {
+            break;
         }
     }
 
@@ -107,19 +119,25 @@ SearchResult MiniMax::search(
         state->get_legal_actions();
     }
 
-
     int best_score = M_MAX - 10;
     int move_index = 0;
     int total_moves = (int)state->legal_actions.size();
+
+    int alpha = M_MAX;
+    int beta = P_MAX;
 
     for(auto& action : state->legal_actions){
         /* [ Hackathon TODO 4-1 ]
          * search this move like TODO 3, but starting from the root */
         State* next = state->next_state(action);
         bool same = next->same_player_as_parent();
-        int raw = MiniMax::eval_ctx(next, depth - 1, history, 1, ctx, p);
+        int raw = same
+            ? MiniMax::eval_ctx(next, depth - 1, alpha, beta, history, 1, ctx, p)
+            : MiniMax::eval_ctx(next, depth - 1, -beta, -alpha, history, 1, ctx, p);
+
         int score = same ? raw : -raw;
         delete next;
+
             if(score > best_score){
                 // [ Hackathon TODO 4-2 ]
                 // keep this move if it is the best so far
@@ -129,6 +147,9 @@ SearchResult MiniMax::search(
                    ctx.on_root_update({result.best_move, best_score, depth, move_index + 1, total_moves});
                 }
             }
+        if (best_score > alpha) {
+            alpha = best_score;
+        }
         move_index++;
     }
 
