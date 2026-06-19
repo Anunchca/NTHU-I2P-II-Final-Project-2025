@@ -67,10 +67,7 @@ int State::evaluate(
     bool use_mobility,
     const GameHistory* history
 ){
-    (void)history; // just to suppress warning
-
-    // [ Hackathon TODO 1-1 ]
-    // if in win state, return max score(you can check base_state.hpp for max score)
+    (void)history;
     if(this->game_state == WIN){
         return P_MAX;
     }
@@ -84,8 +81,7 @@ int State::evaluate(
 
         int self_kr = -1, self_kc = -1;
         int oppn_kr = -1, oppn_kc = -1;
-        // [ Hackathon TODO 1-3 ]
-        // get the position for player's king and opponent's king
+
         for(int r = 0; r < BOARD_H; r++){
             for(int c = 0; c < BOARD_W; c++){
                 if(self_board[r][c] == 6){
@@ -99,10 +95,6 @@ int State::evaluate(
             }
         }
 
-        // [ Hackathon TODO 1-4 ]
-        // sum player/opponent pieces' value and add to score
-        // if enemy king is still on the board, you should also call king_tropism for your pieces and add the value to score
-        // king_tropism is already given above
         for(int r = 0; r < BOARD_H; r++){
             for(int c = 0; c < BOARD_W; c++){
 
@@ -163,9 +155,6 @@ int State::evaluate(
 
     }else{
         /* === Simple material-only eval === */
-
-        // [ Hackathon TODO 1-2 ]
-        // Simply add each piece's value to score
         for(int r = 0; r < BOARD_H; r++){
             for(int c = 0; c < BOARD_W; c++){
                 int sb = self_board[r][c];
@@ -182,9 +171,6 @@ int State::evaluate(
 
     /* === Mobility bonus === */
     if(use_mobility){
-        // [ Hackathon TODO 1-5 ]
-        // you can calculate mobility by legal actions size
-        // bonus += 2 * (self_mobility - oppn_mobility);
         this->get_legal_actions();
         int self_mobility = static_cast<int>(this->legal_actions.size());
         int oppn_mobility = 0;
@@ -307,8 +293,6 @@ static const int move_table_rook_bishop[8][7][2] = {
   {{-1, -1}, {-2, -2}, {-3, -3}, {-4, -4}, {-5, -5}, {-6, -6}, {-7, -7}},
 };
 
-// [ Hackathon TODO 2-1 ]
-// fill the knight move table
 static const int move_table_knight[8][2] = {
     {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
     {1, 2}, {1, -2}, {-1, 2}, {-1, -2},
@@ -420,8 +404,6 @@ void State::get_legal_actions_naive(){
                         break;
 
                     case 3: //knight
-                        // [ Hackathon TODO 2-2 ]
-                        // complete knight's movement, you can refer to other pieces' movement
                         for(auto move: move_table_knight){
                             int p[2] = {move[0] + i, move[1] + j};
 
