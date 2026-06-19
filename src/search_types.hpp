@@ -1,9 +1,13 @@
 #pragma once
 #include "base_state.hpp"
 #include "search_params.hpp"
+//
+#include "policy/tt.hpp"
+//
 #include <vector>
 #include <cstdint>
 #include <functional>
+
 
 class State;
 
@@ -20,11 +24,17 @@ struct SearchContext {
     int seldepth = 0;
     bool stop = false;
     ParamMap params;
+    //
+    TranspositionTable tt;
+    //
     std::function<void(const RootUpdate&)> on_root_update;
 
     void reset(){
         nodes = 0;
         seldepth = 0;
+        //
+        //tt.clear();
+        //
     }
 };
 

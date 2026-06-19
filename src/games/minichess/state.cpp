@@ -134,6 +134,33 @@ int State::evaluate(
             }
         }
 
+        int directions[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
+
+        // 1. 我方國王保鏢檢查
+        if (self_kr != -1) {
+            for (int d = 0; d < 8; d++) {
+                int nr = self_kr + directions[d][0];
+                int nc = self_kc + directions[d][1];
+                if (nr >= 0 && nr < BOARD_H && nc >= 0 && nc < BOARD_W) {
+                    if (self_board[nr][nc] != 0 && self_board[nr][nc] != 6) {
+                        self_score += 5;
+                    }
+                }
+            }
+        }
+
+        if (oppn_kr != -1) {
+            for (int d = 0; d < 8; d++) {
+                int nr = oppn_kr + directions[d][0];
+                int nc = oppn_kc + directions[d][1];
+                if (nr >= 0 && nr < BOARD_H && nc >= 0 && nc < BOARD_W) {
+                    if (oppn_board[nr][nc] != 0 && oppn_board[nr][nc] != 6) {
+                        oppn_score += 15;
+                    }
+                }
+            }
+        }
+
     }else{
         /* === Simple material-only eval === */
 

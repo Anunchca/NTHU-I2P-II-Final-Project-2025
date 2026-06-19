@@ -2,6 +2,8 @@
 #include "search_types.hpp"
 #include "game_history.hpp"
 
+class State;
+
 struct MMParams {
     bool use_kp_eval = true;
     bool use_eval_mobility = true;
@@ -33,6 +35,16 @@ public:
         int depth,
         GameHistory& history,
         SearchContext& ctx
+    );
+
+    static int quiescence(
+        State *state,
+        int alpha,
+        int beta,
+        GameHistory& history,
+        int ply,
+        SearchContext& ctx,
+        const MMParams& p
     );
 
     static ParamMap default_params();
