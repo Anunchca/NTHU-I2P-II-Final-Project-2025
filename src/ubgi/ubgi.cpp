@@ -498,9 +498,13 @@ static void cmd_go(std::istringstream& iss){
         max_depth = 6;
     }
 
+    g_ctx.nodes = 0;
+    g_ctx.seldepth = 0;
+    g_ctx.stop = false;
+
     SearchContext ctx;
     ctx.params = g_params;
-    g_ctx.stop = false;
+
     g_searching = true;
     g_bestmove_sent = false;
     uint32_t gen = g_search_gen.load();
